@@ -3,7 +3,7 @@ import { companyStatusEnum } from '../enum/companyStatus.enum';
 
 @Entity({ name: 'ticket' })
 export class Ticket {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ nullable: false })

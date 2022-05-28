@@ -7,6 +7,7 @@ import { CompanyModule } from './company/company.module';
 import { PlaceModule } from './place/place.module';
 import { TicketModule } from './ticket/ticket.module';
 import { InChargeModule } from './in-charge/in-charge.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -24,6 +25,7 @@ import { InChargeModule } from './in-charge/in-charge.module';
     PlaceModule,
     TicketModule,
     InChargeModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
