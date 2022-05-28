@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CompanyModule } from './company/company.module';
 import { PlaceModule } from './place/place.module';
 import { TicketModule } from './ticket/ticket.module';
+import { InChargeModule } from './in-charge/in-charge.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -22,6 +23,7 @@ import { TicketModule } from './ticket/ticket.module';
     CompanyModule,
     PlaceModule,
     TicketModule,
+    InChargeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
