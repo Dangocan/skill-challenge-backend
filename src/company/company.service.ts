@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindConditions, FindOneOptions, Repository } from 'typeorm';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company } from './entities/company.entity';
@@ -11,24 +11,34 @@ export class CompanyService {
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
   ) {}
-
-  create(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
+  async create(createCompanyDto: CreateCompanyDto) {
+    const company = this.companyRepository.create(createCompanyDto);
+    return this.companyRepository.create(company);
   }
 
-  findAll() {
-    return `This action returns all company`;
+  async findAll() {
+    return await this.companyRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  async findOne(
+    conditions: FindConditions<Company>,
+    options?: FindOneOptions<Company>,
+  ) {
+    try {
+      return await this.findOne(conditions, options);
+    } catch (error) {
+      throw new NotFoundException();
+    }
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  async update(id: string, updateCompanyDto: UpdateCompanyDto) {
+    const place = await this.findOne({ id });
+    this.companyRepository.merge(place, updateCompanyDto);
+    return await this.companyRepository.save(place);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async remove(id: string) {
+    await this.companyRepository.findOne({ id });
+    return await this.companyRepository.delete(id);
   }
 }
