@@ -8,6 +8,7 @@ import { PlaceModule } from './place/place.module';
 import { TicketModule } from './ticket/ticket.module';
 import { InChargeModule } from './in-charge/in-charge.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
     TicketModule,
     InChargeModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
