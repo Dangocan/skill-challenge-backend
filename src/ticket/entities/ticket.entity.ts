@@ -1,5 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { companyStatusEnum } from '../enum/companyStatus.enum';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { ticketStatusEnum } from '../enum/ticketStatus.enum';
 
 @Entity({ name: 'ticket' })
 export class Ticket {
@@ -9,13 +15,13 @@ export class Ticket {
   @Column({ nullable: false })
   title: string;
 
-  @Column({ default: companyStatusEnum.PENDENTE, nullable: false })
+  @Column({ default: ticketStatusEnum.PENDENTE, nullable: false })
   status: string;
 
-  @Column({ type: 'datetime', nullable: false })
+  @CreateDateColumn({ type: 'timestamp', nullable: false })
   createAt: string;
 
-  @Column({ type: 'datetime', nullable: false })
+  @UpdateDateColumn({ type: 'timestamp', nullable: false })
   lastModified: string;
 
   @Column({ nullable: false })

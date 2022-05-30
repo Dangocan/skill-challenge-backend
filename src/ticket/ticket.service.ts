@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindConditions, FindOneOptions, Repository } from 'typeorm';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { Ticket } from './entities/ticket.entity';
@@ -9,25 +9,37 @@ import { Ticket } from './entities/ticket.entity';
 export class TicketService {
   constructor(
     @InjectRepository(Ticket)
-    private readonly companyRepository: Repository<Ticket>,
+    private readonly ticketRepository: Repository<Ticket>,
   ) {}
-  create(createTicketDto: CreateTicketDto) {
-    return 'This action adds a new ticket';
+  async create(createTicketDto: CreateTicketDto) {
+    const company = this.ticketRepository.create(createTicketDto);
+
+    return await this.ticketRepository.save(company);
   }
 
-  findAll() {
-    return `This action returns all ticket`;
+  async findAll() {
+    return await this.ticketRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ticket`;
+  async findOne(
+    conditions: FindConditions<Ticket>,
+    options?: FindOneOptions<Ticket>,
+  ) {
+    try {
+      return await this.ticketRepository.findOneOrFail(conditions, options);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
-  update(id: number, updateTicketDto: UpdateTicketDto) {
-    return `This action updates a #${id} ticket`;
+  async update(id: string, updateTicketDto: UpdateTicketDto) {
+    const ticket = await this.findOne({ id });
+    this.ticketRepository.merge(ticket, updateTicketDto);
+    return await this.ticketRepository.save(ticket);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ticket`;
+  async remove(id: string) {
+    await this.ticketRepository.findOne({ id });
+    return await this.ticketRepository.delete(id);
   }
 }

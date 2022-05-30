@@ -22,10 +22,10 @@ export class User {
   @Column()
   password: string;
 
-  @CreateDateColumn({ name: 'created-at', type: 'datetime', nullable: false })
+  @CreateDateColumn({ name: 'created-at', type: 'timestamp', nullable: false })
   createAt: string;
 
-  @UpdateDateColumn({ name: 'updated-at', type: 'datetime', nullable: false })
+  @UpdateDateColumn({ name: 'updated-at', type: 'timestamp', nullable: false })
   updatedAt: string;
 
   @BeforeInsert()
