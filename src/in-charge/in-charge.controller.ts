@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { InChargeService } from './in-charge.service';
 import { CreateInChargeDto } from './dto/create-in-charge.dto';
 import { UpdateInChargeDto } from './dto/update-in-charge.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('in-charge')
+@UseGuards(AuthGuard('jwt'))
 export class InChargeController {
   constructor(private readonly inChargeService: InChargeService) {}
 
