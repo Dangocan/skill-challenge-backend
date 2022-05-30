@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindConditions, FindOneOptions, Repository } from 'typeorm';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
 import { Place } from './entities/place.entity';
@@ -9,25 +9,36 @@ import { Place } from './entities/place.entity';
 export class PlaceService {
   constructor(
     @InjectRepository(Place)
-    private readonly companyRepository: Repository<Place>,
+    private readonly placeRepository: Repository<Place>,
   ) {}
-  create(createPlaceDto: CreatePlaceDto) {
-    return 'This action adds a new place';
+  async create(createPlaceDto: CreatePlaceDto) {
+    const company = this.placeRepository.create(createPlaceDto);
+    return this.placeRepository.create(company);
   }
 
-  findAll() {
-    return `This action returns all place`;
+  async findAll() {
+    return await this.placeRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} place`;
+  async findOne(
+    conditions: FindConditions<Place>,
+    options?: FindOneOptions<Place>,
+  ) {
+    try {
+      return await this.findOne(conditions, options);
+    } catch (error) {
+      throw new NotFoundException();
+    }
   }
 
-  update(id: number, updatePlaceDto: UpdatePlaceDto) {
-    return `This action updates a #${id} place`;
+  async update(id: string, updatePlaceDto: UpdatePlaceDto) {
+    const place = await this.findOne({ id });
+    this.placeRepository.merge(place, updatePlaceDto);
+    return await this.placeRepository.save(place);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} place`;
+  async remove(id: string) {
+    await this.placeRepository.findOne({ id });
+    return await this.placeRepository.delete(id);
   }
 }
