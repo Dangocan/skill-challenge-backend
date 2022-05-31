@@ -8,7 +8,4 @@ export class CreateTicketDto {
   @IsOptional()
   @IsIn(Object.values(ticketStatusEnum))
   status: string;
-
-  @IsNotEmpty()
-  name: string;
 }
