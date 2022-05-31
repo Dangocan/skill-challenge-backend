@@ -10,5 +10,5 @@ export class CreateTicketDto {
   status: string;
 
   @IsNotEmpty()
-  inCharge: string;
+  name: string;
 }

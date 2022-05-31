@@ -3,10 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { hashSync } from 'bcrypt';
+import { Company } from 'src/company/entities/company.entity';
 
 @Entity()
 export class User {
@@ -27,6 +29,9 @@ export class User {
 
   @UpdateDateColumn({ name: 'updated-at', type: 'timestamp', nullable: false })
   updatedAt: string;
+
+  @OneToMany(() => Company, (company) => company.user)
+  companies: Company[];
 
   @BeforeInsert()
   hashPassword() {

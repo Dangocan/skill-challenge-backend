@@ -1,7 +1,11 @@
+import { Place } from 'src/place/entities/place.entity';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,6 +19,12 @@ export class Ticket {
   @Column({ nullable: false })
   title: string;
 
+  @Column({ nullable: false })
+  name: string;
+
+  @Column({ nullable: false })
+  createdBy: string;
+
   @Column({ default: ticketStatusEnum.PENDENTE, nullable: false })
   status: string;
 
@@ -26,4 +36,13 @@ export class Ticket {
 
   @Column({ nullable: false })
   inCharge: string;
+
+  @ManyToOne(() => Place, (place) => place.ticket)
+  place: Place;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  titleMaking() {
+    this.title = `${this.id} ${this.title}`;
+  }
 }
