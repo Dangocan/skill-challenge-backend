@@ -3,7 +3,7 @@ import { ticketStatusEnum } from '../enum/ticketStatus.enum';
 
 export class CreateTicketDto {
   @IsNotEmpty()
-  title: string;
+  name: string;
 
   @IsOptional()
   @IsIn(Object.values(ticketStatusEnum))

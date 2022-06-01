@@ -7,11 +7,13 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { FindAllByRelationshipOptionsDto } from './dto/find-all-by-relationship-options.dto';
 
 @Controller('ticket')
 @UseGuards(AuthGuard('jwt'))
@@ -19,8 +21,8 @@ export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @Post()
-  async create(@Body() createTicketDto: CreateTicketDto) {
-    return await this.ticketService.create(createTicketDto);
+  async create(@Body() createTicketDto: CreateTicketDto, @Request() req: any) {
+    return await this.ticketService.create(createTicketDto, req.user.id);
   }
 
   @Get()
@@ -31,6 +33,13 @@ export class TicketController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.ticketService.findOne({ id });
+  }
+
+  @Post('findAllByRelationship')
+  async findAllByRelationship(
+    @Body() options: FindAllByRelationshipOptionsDto,
+  ) {
+    return await this.ticketService.findAllByRelationship(options);
   }
 
   @Patch(':id')
