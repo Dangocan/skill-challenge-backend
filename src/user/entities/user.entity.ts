@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { hashSync } from 'bcrypt';
 import { Company } from 'src/company/entities/company.entity';
+import { Ticket } from 'src/ticket/entities/ticket.entity';
 
 @Entity()
 export class User {
@@ -32,6 +33,9 @@ export class User {
 
   @OneToMany(() => Company, (company) => company.user)
   companies: Company[];
+
+  @OneToMany(() => Ticket, (ticket) => ticket.createdBy)
+  ticketsCreated: Ticket[];
 
   @BeforeInsert()
   hashPassword() {
