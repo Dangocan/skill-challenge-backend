@@ -22,26 +22,26 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   async findAll() {
     return await this.userService.findAll();
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
   async findOne(@Param('id') id: string) {
     return await this.userService.findOne({ id });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.userService.update(id, updateUserDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   async remove(@Param('id') id: string) {
     return await this.userService.remove(id);
   }
