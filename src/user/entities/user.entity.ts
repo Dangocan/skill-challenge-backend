@@ -37,6 +37,9 @@ export class User {
   @OneToMany(() => Ticket, (ticket) => ticket.createdBy)
   ticketsCreated: Ticket[];
 
+  @OneToMany(() => Ticket, (ticket) => ticket.userInCharge)
+  ticketsToResolve: Ticket[];
+
   @BeforeInsert()
   hashPassword() {
     this.password = hashSync(this.password, 10);

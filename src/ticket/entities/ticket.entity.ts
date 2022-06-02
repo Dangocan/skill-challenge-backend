@@ -36,12 +36,12 @@ export class Ticket extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamp', nullable: false })
   lastModified: string;
 
-  /*@Column()
-  inCharge: string;*/
-
   @ManyToOne(() => Place, (place) => place.ticket)
   place: Place;
 
   @ManyToOne(() => User, (user) => user.ticketsCreated)
   createdBy: User;
+
+  @ManyToOne(() => User, (user) => user.ticketsToResolve)
+  userInCharge: User;
 }

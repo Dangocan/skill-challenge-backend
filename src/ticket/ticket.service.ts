@@ -16,9 +16,13 @@ export class TicketService {
     private readonly userRepository: Repository<User>,
   ) {}
   async create(createTicketDto: CreateTicketDto, userId: string) {
-    const userCreator = await this.userRepository.findOne({ id: userId });
-    const ticket = this.ticketRepository.create(createTicketDto);
+    const userInCharge = await this.userRepository.findOne({
+      id: createTicketDto.userInCharge,
+    });
+    const semiTicketData = { ...createTicketDto, userInCharge: userInCharge };
+    const ticket = this.ticketRepository.create(semiTicketData);
 
+    const userCreator = await this.userRepository.findOne({ id: userId });
     ticket.createdBy = userCreator;
 
     await this.ticketRepository.save(ticket);
@@ -57,7 +61,13 @@ export class TicketService {
 
   async update(id: string, updateTicketDto: UpdateTicketDto) {
     const ticket = await this.findOne({ id });
-    this.ticketRepository.merge(ticket, updateTicketDto);
+
+    const userInCharge = await this.userRepository.findOne({
+      id: updateTicketDto.userInCharge,
+    });
+    const semiTicketData = { ...updateTicketDto, userInCharge: userInCharge };
+
+    this.ticketRepository.merge(ticket, semiTicketData);
     return await this.ticketRepository.save(ticket);
   }
 
