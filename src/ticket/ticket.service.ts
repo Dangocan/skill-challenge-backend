@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { FindConditions, FindOneOptions, Repository } from 'typeorm';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { FindAllByRelationshipOptionsDto } from './dto/find-all-by-relationship-options.dto';
+import { FindAllByRelationshipOptionsDto } from '../global-dtos/find-all-by-relationship-options.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { Ticket } from './entities/ticket.entity';
 
@@ -19,18 +19,15 @@ export class TicketService {
     const userInCharge = await this.userRepository.findOne({
       id: createTicketDto.userInCharge,
     });
-    const semiTicketData = { ...createTicketDto, userInCharge: userInCharge };
+    const userCreator = await this.userRepository.findOne({ id: userId });
+    const semiTicketData = {
+      ...createTicketDto,
+      userInCharge: userInCharge,
+      createdBy: userCreator,
+    };
     const ticket = this.ticketRepository.create(semiTicketData);
 
-    const userCreator = await this.userRepository.findOne({ id: userId });
-    ticket.createdBy = userCreator;
-
-    await this.ticketRepository.save(ticket);
-
-    const ticketWithId = await this.ticketRepository.findOne({ id: ticket.id });
-    ticketWithId.title = `${ticketWithId.id} ${ticketWithId.name}`;
-
-    return await this.ticketRepository.save(ticketWithId);
+    return await this.ticketRepository.save(ticket);
   }
 
   async findAll() {
@@ -60,7 +57,7 @@ export class TicketService {
   }
 
   async update(id: string, updateTicketDto: UpdateTicketDto) {
-    const ticket = await this.findOne({ id });
+    const ticket = await this.ticketRepository.findOne({ id });
 
     const userInCharge = await this.userRepository.findOne({
       id: updateTicketDto.userInCharge,

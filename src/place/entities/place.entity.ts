@@ -11,7 +11,7 @@ import {
 
 @Entity({ name: 'place' })
 export class Place {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ nullable: false })
@@ -27,5 +27,5 @@ export class Place {
   inCharge: InCharge[];
 
   @OneToMany(() => Ticket, (ticket) => ticket.place)
-  ticket: Ticket[];
+  tickets: Ticket[];
 }

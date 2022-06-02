@@ -19,9 +19,6 @@ export class Ticket extends BaseEntity {
   @Column({ nullable: true })
   title: string;
 
-  @Column({ nullable: false })
-  name: string;
-
   @Column({
     type: 'enum',
     enum: ticketStatusEnum,
@@ -36,7 +33,7 @@ export class Ticket extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamp', nullable: false })
   lastModified: string;
 
-  @ManyToOne(() => Place, (place) => place.ticket)
+  @ManyToOne(() => Place, (place) => place.tickets)
   place: Place;
 
   @ManyToOne(() => User, (user) => user.ticketsCreated)
