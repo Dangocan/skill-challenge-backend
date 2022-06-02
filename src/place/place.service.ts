@@ -53,6 +53,16 @@ export class PlaceService {
   async update(id: string, updatePlaceDto: UpdatePlaceDto, userId: string) {
     const place = await this.placeRepository.findOne({ id });
 
+    const hasAnyConludeStatus = !!(await this.ticketRepository.count({
+      relations: ['place'],
+      where: { place: { id: id }, status: 'CONCLUIDO' },
+    }));
+
+    const isEmpty = !this.ticketRepository.count({
+      relations: ['place'],
+      where: { place: { id: id } },
+    });
+
     const createdBy = await this.userRepository.findOne({
       id: userId,
     });
@@ -60,13 +70,27 @@ export class PlaceService {
     this.placeRepository.merge(place, updatePlaceDto);
     await this.placeRepository.save(place);
 
-    const ticketToSave = this.ticketRepository.create({
-      title: `${id} ${updatePlaceDto.name || place.name}`,
-      createdBy: createdBy,
-      place: place,
-    });
+    if (hasAnyConludeStatus || isEmpty) {
+      const ticketToSave = this.ticketRepository.create({
+        title: `${id} ${updatePlaceDto.name || place.name}`,
+        createdBy: createdBy,
+        place: place,
+      });
 
-    await this.ticketRepository.save(ticketToSave);
+      await this.ticketRepository.save(ticketToSave);
+    } else {
+      const pendingTicket = await this.ticketRepository.findOne({
+        relations: ['place'],
+        where: { place: { id: id }, status: 'PENDENTE' },
+      });
+
+      await this.ticketRepository.update(
+        { id: pendingTicket.id },
+        {
+          title: `${id} ${updatePlaceDto.name || place.name}`,
+        },
+      );
+    }
 
     return await this.placeRepository.save(place);
   }
