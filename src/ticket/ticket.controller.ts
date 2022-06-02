@@ -7,10 +7,10 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request,
+  //Request,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
-import { CreateTicketDto } from './dto/create-ticket.dto';
+//import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FindAllByRelationshipOptionsDto } from '../global-dtos/find-all-by-relationship-options.dto';
